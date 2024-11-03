@@ -1,0 +1,53 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+        <h1>Angular Material sidenav</h1>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="push">
+        <h2 style="margin-left: 16px;">Navigation</h2>
+        <mat-nav-list>
+            <mat-list-item routerLink="/home">
+                <mat-icon>home</mat-icon>
+                Home
+            </mat-list-item>
+            <mat-divider></mat-divider>
+
+            <mat-list-item routerLink="/dashboard">
+                <mat-icon>dashboard</mat-icon>
+                Dashboard
+            </mat-list-item>
+            <mat-divider></mat-divider>
+
+            <mat-list-item routerLink="/add-expense">
+                <mat-icon>link</mat-icon>
+                Add Expense
+            </mat-list-item>
+            <mat-divider></mat-divider>
+
+            <mat-list-item>
+                <mat-icon>link</mat-icon>
+                Link 1
+            </mat-list-item>
+            <mat-divider></mat-divider>
+
+            <mat-list-item>
+                <mat-icon>link</mat-icon>
+                Link 2
+            </mat-list-item>
+            <mat-divider></mat-divider>
+
+            <mat-list-item>
+                <mat-icon>link</mat-icon>
+                Link 3
+            </mat-list-item>
+        </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-container style="height: 88vh;">
+        <router-outlet></router-outlet>
+    </mat-sidenav-container>
+</mat-sidenav-container>

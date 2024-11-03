@@ -1,0 +1,31 @@
+.expense-history-container {
+    padding: 16px;
+    background-color: #f9f9f9;
+    /* Light background for better contrast */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+.table-responsive {
+    margin-top: 20px;
+    /* Space above the table */
+}
+
+thead th {
+    background-color: #007bff;
+    /* Bootstrap primary color */
+    color: white;
+    /* Text color for header */
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+    /* Highlight on hover */
+}
+
+.text-center {
+    text-align: center;
+    /* Center text */
+}
