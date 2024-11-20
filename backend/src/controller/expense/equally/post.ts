@@ -1,41 +1,45 @@
 import { Response } from "express";
+import { addExpenseDB } from "../../../db/expense";
 import { sendResponse } from "../../../common/common";
-import { addExpense } from "../../../db/expense";
+import { addExpenseDetailDB } from "../../../db/expenseDetail";
+import { CustomRequest } from "../../../model/customRequest";
 
-export default async function registerUser(request: any, response: Response) {
+export default async function expenseEqually(request: CustomRequest, response: Response) {
   try {
     const data: any = {
-      amount: parseFloat(request.body.amount),
-      name: request.body.name,
-      paidBy: request.body.paidBy,
-      description: request.body.description,
+      amount: parseFloat(request.body.totalExpense),
+      title: request.body.title,
+      paidBy: request.user.userId,
+      date: request.body.date,
+      notes: request.body.notes,
+      categoryId: request.body.categoryId,
       owedBy: request.body.owedBy,
-      createdBy: request.body.createdBy,
+      createdBy: request.user.userId,
     };
 
     const amount = data.amount;
-    console.log(data);
+    if (!data.date) {
+      data.date = Date.now();
+    }
+    data.owedBy = data.owedBy.map((user: any) => user.id).join(", ");
 
-    const info = await addExpense(data);
-    console.log(data.owedBy);
+    const info = await addExpenseDB(data);
 
     const owedByUsersList: string[] = data.owedBy.split(",");
-    console.log("owedByUsersList:", owedByUsersList);
 
     for (let i = 0; i < owedByUsersList.length; i++) {
       data.owedBy = owedByUsersList[i];
       data.amount = amount / (owedByUsersList.length + 1);
-      data.transactionId = info?.data?.expenseId; // Ensure expenseId is available
+      data.expenseId = info?.data?.expenseId;
       console.log(data.transactionId);
 
-      // const info1 = await addSplitExpense(data);
-      // if (info1.status === 400) {
-      //   res.send(responses.errorOccured(400, info1));
-      //   return; // Exit the function to avoid sending multiple responses
-      // }
+      const info1 = await addExpenseDetailDB(data);
+      if (info1.status === 400) {
+        return sendResponse(request, response, info1.statusCode, info1.clientMessage);
+      }
     }
 
-    // res.send(responses.successResponse(200, "Expense added successfully"));
+    return sendResponse(request, response, 200, "Expense Added Successfully");
   } catch (e: any) {
     return sendResponse(request, response, 400, { Message: e.message });
   }

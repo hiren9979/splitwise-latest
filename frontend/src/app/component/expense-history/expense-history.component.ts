@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  date: string;
-}
+import { ExpenseService } from 'src/app/services/expense/expense.service';
 
 @Component({
   selector: 'app-expense-history',
@@ -14,36 +8,50 @@ interface Expense {
   styleUrls: ['./expense-history.component.css'],
 })
 export class ExpenseHistoryComponent implements OnInit {
-  expenses: Expense[] = [];
+  expenses: any[] = [];
   userId: number | null = null;
+  expenseHistory: any = [];
+  otherUserId: string | null = null;
+  loginUserId: string | null = null;
+  balance: number = 0;
+  Math = Math; // Make Math available in template
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
-
-  // Dummy expense data
-  private allExpenses: { [key: number]: Expense[] } = {
-    1: [
-      { id: 1, description: 'Dinner', amount: 50, date: '2024-01-01' },
-      { id: 2, description: 'Movie', amount: 20, date: '2024-01-05' },
-    ],
-    2: [
-      { id: 3, description: 'Lunch', amount: 30, date: '2024-01-02' },
-      { id: 4, description: 'Uber', amount: 15, date: '2024-01-06' },
-    ],
-    3: [
-      { id: 5, description: 'Groceries', amount: 100, date: '2024-01-03' },
-      { id: 6, description: 'Gas', amount: 40, date: '2024-01-07' },
-    ],
-    // Add more user expenses as needed
-  };
+  constructor(private route: ActivatedRoute, 
+              private router: Router, 
+              private expenseService: ExpenseService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.userId = +params['id']; // Get user ID from route parameters
-      if (this.userId) {
-        this.expenses = this.allExpenses[this.userId] || [];
+      this.userId = +params['id'];
+      this.otherUserId = this.route.snapshot.paramMap.get('id') || '';
+      console.log(this.otherUserId);
+
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+      this.loginUserId = user ? user.id : null;
+      console.log("Login User ID:", this.loginUserId);
+      if (this.otherUserId) {
+        this.fetchExpenseHistory();
       }
     });
   }
+
+  fetchExpenseHistory(): void {
+    this.expenseService.expenseHistory(this.otherUserId).subscribe(
+      (response: any) => {
+        console.log(response);
+        
+        this.expenses = response.transactions;
+        this.balance = response.balance;
+        console.log('Expenses:', this.expenses);
+        console.log('Expense History:', this.expenseHistory);
+      },
+      (error: any) => {
+        console.error('Error fetching expense history:', error);
+      }
+    );
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }

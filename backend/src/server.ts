@@ -5,9 +5,10 @@ import http from "http";
 import connection from "./db/db";
 
 const app = express();
-const port = 8080;
+const port = 3000;
 
 app.use(cors());
+app.use(express.json());
 app.use(json({ limit: "200mb" }));
 app.use(text());
 app.use(

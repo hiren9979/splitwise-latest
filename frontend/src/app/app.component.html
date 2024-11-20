@@ -2,6 +2,10 @@
     <mat-toolbar-row>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
         <h1>Angular Material sidenav</h1>
+        <span class="spacer"></span>
+
+        <span class="username-display" *ngIf="userName">{{userName}}</span>
+        <button class="logout-btn" mat-button color="primary" (click)="logout()">Logout</button>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -21,9 +25,9 @@
             </mat-list-item>
             <mat-divider></mat-divider>
 
-            <mat-list-item routerLink="/add-expense">
-                <mat-icon>link</mat-icon>
-                Add Expense
+            <mat-list-item routerLink="/category">
+                <mat-icon>category</mat-icon>
+                Categories
             </mat-list-item>
             <mat-divider></mat-divider>
 

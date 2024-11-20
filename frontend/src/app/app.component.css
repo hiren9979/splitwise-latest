@@ -18,3 +18,24 @@ mat-icon {
 h2 {
     margin: 16px 0;
 }
+
+.spacer {
+    flex: 1;
+}
+
+.logout-btn {
+    background-color: #ffd166;
+    color: black !important;
+    font-weight: bold;
+}
+
+.username-display {
+    margin-right: 15px;
+    font-size: 16px;
+    color: white;
+}
+
+.mat-toolbar-row {
+    display: flex;
+    align-items: center;
+}

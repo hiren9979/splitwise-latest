@@ -28,8 +28,16 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(
         (response:any) => {
-          if(response?.statusCode)
-          console.log('Login Successfull!');
+          if(response?.statusCode === 200)
+          console.log('Login Successfull!', response.authData);
+          localStorage.setItem('authToken', response.authData.authToken.toString());
+          const user = {
+            id: response.authData.id,
+            email: response.authData.email,
+            name: response.authData.name,
+          }
+          localStorage.setItem('user', JSON.stringify(user));
+
           this.router.navigate(['/home']);
         },
         (error) => {

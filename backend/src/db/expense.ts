@@ -1,69 +1,169 @@
-import { execute } from "../common/common.js";
-import responses from "../common/response.js";
-import { generateV4uuid } from "../common/util.js";
+import { execute } from "../common/common";
+import { generateV4uuid } from "../common/util";
+import { Expense } from "../model/expense";
 
-interface AddExpenseData {
-  amount: number;
-  name: string;
-  paidBy: string;
-  owedBy: string[];
-  description: string;
-}
-
-
-export async function addExpense(data: AddExpenseData): Promise<any> {
+export async function addExpenseDB(data: Expense): Promise<any> {
   try {
-    const userList = data.owedBy.join(",");
-    console.log(userList);
     console.log("adding expense");
-    const query = `INSERT INTO expense (id, amount, name, paidBy, owedBy, notes, createdBy)
-                   VALUES (?, ?, ?, ?, ?, ?, ?);`;
+    const query = `INSERT INTO expense (id, amount, paidBy, owedBy, title, date, categoryId, notes, createdBy, createdAt)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
     const expenseId = generateV4uuid();
     console.log(expenseId);
     const result = await execute(query, [
       expenseId,
       data.amount,
-      data.name,
       data.paidBy,
-      userList,
-      data.description,
-      "f",
-    ]); 
+      data.owedBy,
+      data.title,
+      data.date,
+      data.categoryId,
+      data.notes,
+      data.paidBy,
+      Date.now()
+    ]);
     console.log("result: " + result);
     if (result && result.affectedRows > 0) {
       console.log("Expense added successfully.");
       return {
-        status: 200,
-        message: "Successfully added expense",
+        statusCode: 200,
+        clientMessage: "Successfully added expense",
         data: { expenseId },
       };
     } else {
       console.error("Failed to add expense.");
-      return { status: 400, message: "Failed to add expense" };
+      return { statusCode: 400, clientMessage: "Failed to add expense" };
     }
   } catch (error) {
     console.error("Error adding expense:", error);
-    throw error; 
-  } 
+    throw error;
+  }
 }
 
-export async function addSplitExpense(data: any): Promise<any> {
+export async function getExpenseHistoryDB(data: any) {
   try {
-    const query = `INSERT INTO splitexpense (id, paidBy, owedBy, amount, transactionId, createdBy) VALUES (?, ?, ?, ?, ?, ?);`;
-    const result = await execute(query, [
-      generateV4uuid(),
-      data.paidBy,
-      data.owedBy,
-      data.amount,
-      data.transactionId,
-      data.createdBy,
-    ]);
-    if (result) {
-      return result;
-    } else {
-      return responses.badRequest;
-    }
+    console.log("Getting expense history");
+    const query = `SELECT ed.id,ed.amount
+                      ,JSON_OBJECT(
+                          'id', u.id,
+                          'name', u.name,
+                          'email', u.email
+                      ) as paidBy,
+                      JSON_OBJECT(
+                          'id', u1.id,
+                          'name', u1.name,
+                          'email', u1.email
+                      ) as owedBy,
+                      JSON_OBJECT(
+                          'id', e.id,
+                          'amount', e.amount,
+                          'balance', CASE 
+                               WHEN ed.paidBy = ? THEN ed.amount
+                               WHEN ed.paidBy = ? THEN -ed.amount
+                           END,                
+                          'notes', e.notes,
+                          'title', e.title,
+                          'date', e.date,
+                          'category', (
+                              SELECT name FROM category c WHERE c.id = e.categoryId AND c.isDeleted = false
+                          ),
+                          'paidBy', e.paidBy,
+                          'owedBy', e.owedBy,
+                          'createdAt', e.createdAt,
+                          'user', (
+                              SELECT JSON_ARRAYAGG(
+                                  JSON_OBJECT(
+                                      'id', u.id,
+                                      'name', u.name,
+                                      'email', u.email
+                                  )
+                              ) FROM users u WHERE FIND_IN_SET(u.id, e.owedBy) > 0
+                          )
+                      ) as expense 
+                      FROM expenseDetail ed
+                      LEFT JOIN expense e ON e.id = ed.expenseId
+                      LEFT JOIN users u ON u.id = ed.paidBy
+                      LEFT JOIN users u1 ON u1.id = ed.owedBy
+                      WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
+                        OR (ed.owedBy = ? AND ed.paidBy = ?)
+                      ORDER BY e.createdAt DESC`;
+    // const query = `SELECT ed.id,ed.amount
+    //                ,JSON_OBJECT(
+    //                    'id', u.id,
+    //                    'name', u.name,
+    //                    'email', u.email
+    //                ) as paidBy,
+    //                JSON_OBJECT(
+    //                    'id', u1.id,
+    //                    'name', u1.name,
+    //                    'email', u1.email
+    //                ) as owedBy,
+    //                COALESCE(totalAmounts.total, 0) as balance,
+    //                JSON_OBJECT(
+    //                    'id', e.id,
+    //                    'amount', e.amount,
+    //                    'notes', e.notes,
+    //                    'title', e.title,
+    //                    'paidBy', e.paidBy,
+    //                    'owedBy', e.owedBy,
+    //                    'createdAt', e.createdAt,
+    //                    'user', (
+    //                        SELECT JSON_ARRAYAGG(
+    //                            JSON_OBJECT(
+    //                                'id', u.id,
+    //                                'name', u.name,
+    //                                'email', u.email
+    //                            )
+    //                        ) FROM users u WHERE FIND_IN_SET(u.id, e.owedBy) > 0
+    //                    )
+    //                ) as expense 
+    //                FROM expenseDetail ed
+    //                LEFT JOIN expense e ON e.id = ed.expenseId
+    //                LEFT JOIN users u ON u.id = ed.paidBy
+    //                LEFT JOIN users u1 ON u1.id = ed.owedBy
+    //                LEFT JOIN (
+    //                    SELECT 
+    //                        ed.owedBy,
+    //                        SUM(CASE 
+    //                            WHEN ed.paidBy = ? THEN ed.amount
+    //                            WHEN ed.paidBy = ? THEN -ed.amount
+    //                        END) AS total
+    //                    FROM expenseDetail ed
+    //                    WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
+    //                       OR (ed.owedBy = ? AND ed.paidBy = ?)
+    //                    GROUP BY ed.owedBy
+    //                ) AS totalAmounts ON totalAmounts.owedBy = ed.owedBy
+    //                WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
+    //                   OR (ed.owedBy = ? AND ed.paidBy = ?)
+    //                ORDER BY e.createdAt DESC`;
+                   
+    const params = [
+      data.paidBy, data.otherUserId,  // For totalAmounts subquery CASE
+      data.otherUserId, data.paidBy, data.paidBy, data.otherUserId   // For main WHERE clause
+    ];
+    
+    const result = await execute(query, params);
+    const newResult = result.map((item: any) => ({
+      ...item,
+      expense: item.expense ? JSON.parse(item.expense) : item.expense,
+      paidBy: item.paidBy ? JSON.parse(item.paidBy) : item.paidBy,
+      owedBy: item.owedBy ? JSON.parse(item.owedBy) : item.owedBy
+    }));
+
+    // Calculate total balance
+    const totalBalance = newResult.reduce((sum: number, item: any) => {
+      return sum + (item.expense.balance || 0);
+    }, 0);
+
+    return {
+      transactions: newResult,
+      balance: totalBalance
+    };
+
   } catch (error) {
-    return responses.tryAgain;
+    console.error("Error in getExpenseHistoryDB:", error);
+    return {
+      transactions: [],
+      totalBalance: 0
+    };
   }
 }

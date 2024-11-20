@@ -1,15 +1,42 @@
 .dashboard-container {
-    padding: 20px;
+    padding: 24px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.dashboard-title {
+    color: #2c3e50;
+    margin-bottom: 24px;
+    font-weight: 600;
+    text-align: center;
 }
 
 .chart-container {
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #f8f9fa;
-    /* Light background for contrast */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Shadow for depth */
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    height: 100%;
+}
+
+.chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.date-filters {
+    padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px;
+    }
+
+    .chart-container {
+        margin-bottom: 16px;
+    }
 }
 
 h3 {

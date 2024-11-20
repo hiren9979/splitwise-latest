@@ -1,0 +1,27 @@
+<div class="category-container">
+  <div class="header">
+    <h2>Categories</h2>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      Add Category
+    </button>
+  </div>
+
+  <div class="categories-list">
+    <mat-card *ngFor="let category of categories" class="category-card">
+      <mat-card-content>
+        <div class="category-info">
+          <span class="category-name">{{ category.name }}</span>
+          <div class="category-actions">
+            <button mat-icon-button color="primary" (click)="openEditDialog(category)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCategory(category.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div> 

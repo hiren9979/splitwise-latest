@@ -1,0 +1,33 @@
+Expense History Balance Calculation Logic
+
+1. When User A is viewing expense history with User B:
+
+   For paidBy:
+   - When User A paid (paidBy = User A): Amount is POSITIVE
+   - This represents money that User A should receive from User B
+
+   For owedBy:
+   - When User A owes (owedBy = User A): Amount is NEGATIVE
+   - This represents money that User A needs to pay to User B
+
+2. Balance Calculation in SQL:
+   ```sql
+   SUM(CASE 
+       WHEN ed.paidBy = UserA THEN ed.amount      -- User A paid (positive)
+       WHEN ed.owedBy = UserA THEN -ed.amount     -- User A owes (negative)
+   END) AS total
+   ```
+
+3. Examples:
+   a) User A paid $100 for User B
+      - Balance for User A: +$100 (User B owes User A)
+      - Balance for User B: -$100 (User B needs to pay User A)
+
+   b) User B paid $50 for User A
+      - Balance for User A: -$50 (User A needs to pay User B)
+      - Balance for User B: +$50 (User A owes User B)
+
+4. Net Balance:
+   - The final balance shown is the net sum of all transactions
+   - Positive balance means the other user owes you money
+   - Negative balance means you owe the other user money 

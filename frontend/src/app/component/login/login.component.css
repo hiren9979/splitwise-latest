@@ -7,3 +7,14 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
+.signup-link {
+    color: #3f51b5;  /* Material primary color */
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+  

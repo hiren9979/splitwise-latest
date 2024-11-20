@@ -1,44 +1,95 @@
-<div class="add-expense-container">
-    <button mat-icon-button (click)="goBack()" aria-label="Back">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2 class="text-center">Add Expense</h2>
+<div class="add-expense-container overflow-auto">
 
-    <form (ngSubmit)="onSubmit()" #expenseForm="ngForm">
-        <div class="form-group">
-            <label for="userSelect">Select User:</label>
-            <select id="userSelect" class="form-control" required [(ngModel)]="selectedUser" name="user"
-                #userSelect="ngModel">
-                <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-            </select>
+    <!-- Expense Form -->
+    <form (ngSubmit)="onSubmit()" #expenseForm="ngForm" class="p-4 border rounded bg-light shadow-sm expenseForm">
+
+        <!-- Select Users Input -->
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-select placeholder="Select Users" multiple [(ngModel)]="selectedUsers" name="selectedUsers">
+                    <mat-option *ngFor="let user of userList" (click)="selectUser(user)" [value]="user">{{ user.name
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
 
-        <h4>Selected Users:</h4>
-        <ul *ngIf="selectedUsers.length > 0">
-            <li *ngFor="let user of selectedUsers">{{ user }}</li>
-        </ul>
-        <ng-container *ngIf="selectedUsers.length === 0">
-            <p>No users selected.</p>
-        </ng-container>
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Expense Title</mat-label>
+              <input matInput [(ngModel)]="title" name="title" required />
+              <mat-error *ngIf="!title">Please enter an expense title</mat-error>
+            </mat-form-field>
+        </div>    
 
-        <div class="form-group">
-            <label for="totalExpense">Total Expense:</label>
-            <input type="number" id="totalExpense" class="form-control" required [(ngModel)]="totalExpense"
-                name="totalExpense" />
+        
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Category</mat-label>
+                <mat-select [(ngModel)]="selectedCategory" name="category" required>
+                    <mat-option *ngFor="let category of categories" [value]="category.id">
+                        {{category.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!selectedCategory">Please select a category</mat-error>
+            </mat-form-field>
         </div>
 
-        <div class="form-group">
-            <label for="notes">Notes:</label>
-            <textarea id="notes" class="form-control" [(ngModel)]="notes" name="notes"></textarea>
+        <div class="mb-3">
+            <mat-form-field>
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="expenseDate">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>              
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Split Type</mat-label>
+                <mat-select [(ngModel)]="splitType" name="splitType" required>
+                    <mat-option value="equally">Equally</mat-option>
+                    <mat-option value="unequally">Unequally</mat-option>
+                </mat-select>
+                <mat-error *ngIf="!splitType">Please select a split type</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Total Expense</mat-label>
+                <input matInput type="number" [(ngModel)]="totalExpense" name="totalExpense" required>
+                <mat-error *ngIf="!totalExpense">Total expense is required</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="splitType === 'unequally'" class="container">
+            <div class="row">
+                <div *ngFor="let user of selectedUsers; let i = index" class="col-md-6 mb-3">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>{{ user.name }}</mat-label>
+                        <input matInput [(ngModel)]="unEqualExpense[i].expense" [ngModelOptions]="{ standalone: true }"
+                            placeholder="Enter {{ user.name }}'s expense" />
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Notes</mat-label>
+                <textarea matInput rows="3" [(ngModel)]="notes" name="notes"></textarea>
+            </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" class="btn btn-primary w-100 mt-3">Submit</button>
     </form>
+
 
     <div *ngIf="submitted" class="mt-3">
         <h4>Expense Details:</h4>
-        <p>User: {{ selectedUserName }}</p>
         <p>Total Expense: ${{ totalExpense }}</p>
         <p>Notes: {{ notes }}</p>
+        <p>Selected Users: {{ selectedUsers.join(', ') }}</p>
     </div>
 </div>

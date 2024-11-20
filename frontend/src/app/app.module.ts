@@ -20,38 +20,52 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { ExpenseHistoryComponent } from './component/expense-history/expense-history.component';
 import { HomeComponent } from './component/home/home.component';
 import { LoginComponent } from './component/login/login.component';
-import { NavbarComponent } from './component/navbar/navbar.component';
 import { SignupComponent } from './component/signup/signup.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CategoryComponent } from './component/category/category.component';
+import { AddCategoryDialogComponent } from './component/category/add-category-dialog/add-category-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     HomeComponent,
     ExpenseHistoryComponent,
     AddExpenseComponent,
     DashboardComponent,
     LoginComponent,
     SignupComponent,
-    ],
+    CategoryComponent,
+    AddCategoryDialogComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatCardModule,
     FormsModule,
-    MatToolbarModule,
-    MatTableModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
+    HttpClientModule,
     MatButtonModule,
-    HttpClientModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

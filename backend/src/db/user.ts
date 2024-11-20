@@ -3,10 +3,10 @@ import RESPONSES from "../common/response";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 
-export async function getUsersDB(): Promise<any[]> {
+export async function getUsersDB(userId: string): Promise<any[]> {
   try {
-    let query = `SELECT * FROM users;`;
-    let result = await execute(query, []);
+    let query = `SELECT * FROM users WHERE id <> ?;`;
+    let result = await execute(query, [userId]);
     return result;
   } catch (e) {
     return [];

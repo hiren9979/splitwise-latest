@@ -1,31 +1,53 @@
-<div class="expense-history-container">
+<div class="expense-history-container container">
     <button mat-icon-button (click)="goBack()" aria-label="Back">
         <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2 *ngIf="userId" class="text-center">Expense History for User ID: {{ userId }}</h2>
-
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-light">
-                <tr>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody *ngIf="expenses.length > 0; else noExpenses">
-                <tr *ngFor="let expense of expenses">
-                    <td>{{ expense.description }}</td>
-                    <td>${{ expense.amount }}</td>
-                    <td>{{ expense.date }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <ng-template #noExpenses>
-            <tr>
-                <td colspan="3" class="text-center">No expenses found for this user.</td>
-            </tr>
-        </ng-template>
+    <h2 *ngIf="userId" class="text-center my-4">Expense History for User ID: {{ userId }}</h2>
+    <h2>Total Balance: 
+        <span [ngClass]="{'text-success': balance >= 0, 'text-danger': balance < 0}">
+            {{ balance >= 0 ? '+' : '-' }}${{ Math.abs(balance) }}
+        </span>
+    </h2>
+    <div class="row" *ngIf="expenses.length > 0; else noExpenses">
+        <div class="col-md-12 mb-3" *ngFor="let expense of expenses">
+            <mat-card class="w-100">
+                <mat-card-header>
+                    <mat-card-title>{{ expense.expense.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h3 class="m-0">{{ expense.title }}</h3>
+                      <p class="text-muted m-0">{{ expense.expense.date | date: 'medium' }}</p>
+                    </div>
+                    <div class="mb-2">
+                      <p class="m-0">
+                        <strong>
+                          <ng-container *ngIf="expense.paidBy.id === loginUserId; else owed">
+                            {{ expense.owedBy.name }} owed you ${{ expense.amount }}
+                          </ng-container>
+                          <ng-template #owed>
+                            You owed {{ expense.paidBy.name }} ${{ expense.amount }}
+                          </ng-template>
+                        </strong>
+                      </p>
+                    </div>
+                    <div class="text-end">
+                      <p class="m-0 fw-bold" [ngClass]="{'text-success': expense.paidBy.id === loginUserId, 'text-danger': expense.paidBy.id !== loginUserId}">
+                        {{ expense.paidBy.id === loginUserId ? '+' : '-' }}${{ expense.amount }}
+                      </p>
+                    </div>
+                  </mat-card-content>
+            </mat-card>
+        </div>
     </div>
 </div>
+
+<ng-template #noExpenses>
+    <div class="text-center">
+        <mat-card class="w-100">
+            <mat-card-content>
+                No expenses found for this user.
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-template>

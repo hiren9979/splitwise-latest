@@ -12,7 +12,7 @@ export default async function loginUser(request: any, response: Response) {
       password: request.headers.password,
     };
     const info = await getUserByEmailDB(userData);
-    return sendResponse(request, response, info.statusCode, info.clientMessage);
+    return sendResponse(request, response, 200, info);
   } catch (e: any) {
     return sendResponse(request, response, 400, { Message: e.message });
   }
