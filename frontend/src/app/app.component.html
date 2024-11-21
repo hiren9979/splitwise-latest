@@ -1,56 +1,61 @@
-<mat-toolbar color="primary">
+<ng-container *ngIf="showNavbar">
+  <mat-toolbar color="primary">
     <mat-toolbar-row>
-        <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
-        <h1>Angular Material sidenav</h1>
-        <span class="spacer"></span>
+      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+      <h1>Angular Material sidenav</h1>
+      <span class="spacer"></span>
 
-        <span class="username-display" *ngIf="userName">{{userName}}</span>
-        <button class="logout-btn" mat-button color="primary" (click)="logout()">Logout</button>
+      <span class="username-display" *ngIf="userName">{{userName}}</span>
+      <button class="logout-btn" mat-button color="primary" (click)="logout()">Logout</button>
     </mat-toolbar-row>
-</mat-toolbar>
+  </mat-toolbar>
 
-<mat-sidenav-container>
+  <mat-sidenav-container>
     <mat-sidenav #sidenav mode="push">
-        <h2 style="margin-left: 16px;">Navigation</h2>
-        <mat-nav-list>
-            <mat-list-item routerLink="/home">
-                <mat-icon>home</mat-icon>
-                Home
-            </mat-list-item>
-            <mat-divider></mat-divider>
+      <h2 style="margin-left: 16px;">Navigation</h2>
+      <mat-nav-list>
+        <mat-list-item routerLink="/home">
+          <mat-icon>home</mat-icon>
+          Home
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
-            <mat-list-item routerLink="/dashboard">
-                <mat-icon>dashboard</mat-icon>
-                Dashboard
-            </mat-list-item>
-            <mat-divider></mat-divider>
+        <mat-list-item routerLink="/dashboard">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
-            <mat-list-item routerLink="/category">
-                <mat-icon>category</mat-icon>
-                Categories
-            </mat-list-item>
-            <mat-divider></mat-divider>
+        <mat-list-item routerLink="/category">
+          <mat-icon>category</mat-icon>
+          Categories
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
-            <mat-list-item>
-                <mat-icon>link</mat-icon>
-                Link 1
-            </mat-list-item>
-            <mat-divider></mat-divider>
+        <mat-list-item>
+          <mat-icon>link</mat-icon>
+          Link 1
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
-            <mat-list-item>
-                <mat-icon>link</mat-icon>
-                Link 2
-            </mat-list-item>
-            <mat-divider></mat-divider>
+        <mat-list-item>
+          <mat-icon>link</mat-icon>
+          Link 2
+        </mat-list-item>
+        <mat-divider></mat-divider>
 
-            <mat-list-item>
-                <mat-icon>link</mat-icon>
-                Link 3
-            </mat-list-item>
-        </mat-nav-list>
+        <mat-list-item>
+          <mat-icon>link</mat-icon>
+          Link 3
+        </mat-list-item>
+      </mat-nav-list>
     </mat-sidenav>
-
     <mat-sidenav-content style="height: 88vh;">
-        <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-container *ngIf="!showNavbar">
+  <router-outlet></router-outlet>
+</ng-container>

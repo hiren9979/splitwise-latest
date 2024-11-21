@@ -1,19 +1,58 @@
-<div class="user-list-container">
-    <div class="d-flex justify-content-center">
-        <button class="btn btn-primary m-3" mat-raised-button (click)="openDialog()">Add Expense</button>
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h1 class="display-4 fw-bold text-primary mb-2">Welcome to Splitwise</h1>
+      <p class="text-muted lead">Track and split expenses with your friends</p>
+      <button mat-raised-button color="primary" class="btn-lg shadow-sm mt-3" (click)="openDialog()">
+        <mat-icon class="me-2">add_circle</mat-icon>
+        Add New Expense
+      </button>
     </div>
-    <div class="row">
-        <div class="col-md-4" *ngFor="let user of users">
-            <mat-card class="user-card" [routerLink]="['/expense-history', user.id]">
-                <mat-card-header>
-                    <mat-icon mat-card-avatar>account_circle</mat-icon>
-                    <mat-card-title>{{ user.name }}</mat-card-title>
-                    <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-actions>
-                    <button mat-button color="primary">View History</button>
-                </mat-card-actions>
-            </mat-card>
+  </div>
+
+  <!-- Friends Section -->
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="fw-bold">Your Friends</h2>
+    </div>
+    <div class="col-md-4 mb-4" *ngFor="let user of users">
+      <div class="card border-0 shadow-sm h-100 hover-card" [routerLink]="['/expense-history', user.id]">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-light p-2 me-3">
+              <mat-icon [class]="'text-' + ['primary', 'success', 'info', 'warning', 'danger'][user.id % 5]">
+                account_circle
+              </mat-icon>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-1">{{ user.name }}</h5>
+              <p class="text-muted small mb-0">{{ user.email }}</p>
+            </div>
+          </div>
+          
+          <div class="alert" [class.alert-success]="user.balance > 0" 
+               [class.alert-danger]="user.balance < 0"
+               [class.alert-light]="user.balance === 0">
+          </div>
+
+          <button mat-button color="primary" class="w-100 mt-2">
+            <mat-icon class="me-2">history</mat-icon>
+            View History
+          </button>
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="row" *ngIf="users.length === 0">
+    <div class="col-12">
+      <div class="text-center py-5 bg-light rounded">
+        <mat-icon class="display-1 text-muted mb-3">people_outline</mat-icon>
+        <h3 class="fw-bold">No Friends Added Yet</h3>
+        <p class="text-muted">Start by adding expenses with your friends to split bills easily</p>
+      </div>
+    </div>
+  </div>
 </div>

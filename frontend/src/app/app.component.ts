@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,19 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'basic-angular';
   userName: string = '';
+  showNavbar: boolean = true;
 
   constructor(private router: Router) {
     // Get username when component initializes
     this.getUserName();
+
+    // Subscribe to router events to check current route
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      // Hide navbar for login and signup pages
+      this.showNavbar = !['/login', '/signup'].includes(event.url);
+    });
   }
 
   getUserName() {

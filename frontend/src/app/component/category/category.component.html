@@ -1,27 +1,46 @@
 <div class="category-container">
   <div class="header">
-    <h2>Categories</h2>
-    <button mat-raised-button color="primary" (click)="openAddDialog()">
+    <div class="header-title">
+      <h2>Categories</h2>
+      <p class="subtitle">Manage your expense categories</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-button">
       <mat-icon>add</mat-icon>
       Add Category
     </button>
   </div>
 
   <div class="categories-list">
-    <mat-card *ngFor="let category of categories" class="category-card">
+    <mat-card *ngFor="let category of categories" class="category-card mat-elevation-z2">
       <mat-card-content>
         <div class="category-info">
-          <span class="category-name">{{ category.name }}</span>
+          <div class="category-name-container">
+            <mat-icon class="category-icon">folder</mat-icon>
+            <span class="category-name">{{ category.name }}</span>
+          </div>
           <div class="category-actions">
-            <button mat-icon-button color="primary" (click)="openEditDialog(category)">
+            <button mat-icon-button color="primary" (click)="openEditDialog(category)" class="action-button edit-button">
               <mat-icon>edit</mat-icon>
+              <span class="action-tooltip">Edit</span>
             </button>
-            <button mat-icon-button color="warn" (click)="deleteCategory(category.id)">
+            <button mat-icon-button color="warn" (click)="deleteCategory(category.id)" class="action-button delete-button">
               <mat-icon>delete</mat-icon>
+              <span class="action-tooltip">Delete</span>
             </button>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
-</div> 
+
+  <!-- Empty state -->
+  <div *ngIf="categories?.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">category</mat-icon>
+    <h3>No Categories Yet</h3>
+    <p>Start by adding your first expense category</p>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      Add Category
+    </button>
+  </div>
+</div>

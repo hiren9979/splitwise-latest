@@ -11,6 +11,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  hidePassword = true;
 
   constructor(
     private formBuilder: FormBuilder,

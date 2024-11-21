@@ -1,41 +1,61 @@
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="container d-flex justify-content-center">
-        <mat-card class="p-4 shadow-lg signup-card">
-            <h2 class="text-center mb-4">Sign Up</h2>
-            <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-                <div class="form-group mb-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Username</mat-label>
-                        <input matInput formControlName="username" required />
-                        <mat-error *ngIf="signupForm.get('username')?.invalid">Username is required</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group mb-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" type="email" required />
-                        <mat-error *ngIf="signupForm.get('email')?.invalid">Enter a valid email</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group mb-4">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Password</mat-label>
-                        <input matInput formControlName="password" type="password" required />
-                        <mat-error *ngIf="signupForm.get('password')?.invalid">Password is required</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <button mat-raised-button color="primary" class="w-100 mt-3" [disabled]="signupForm.invalid">
-                    Sign Up
-                </button>
-
-                <div class="text-center mt-3">
-                    <span>Already have an account? </span>
-                    <a routerLink="/login" class="login-link">Login</a>
-                </div>
-            </form>
-        </mat-card>
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <h2>Create Account</h2>
+      <p class="subtitle">Join Splitwise today</p>
     </div>
+    
+    <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Username</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input matInput placeholder="Choose a username" formControlName="username" required>
+        <mat-error *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched">
+          Username is required
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix>email</mat-icon>
+        <input matInput placeholder="Enter your email" formControlName="email" type="email" required>
+        <mat-error *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" 
+               placeholder="Create a password" 
+               formControlName="password" 
+               required>
+        <mat-icon matSuffix (click)="hidePassword = !hidePassword" class="cursor-pointer">
+          {{hidePassword ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
+        <mat-error *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="terms-privacy">
+        <mat-checkbox color="primary" formControlName="acceptTerms">
+          I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+        </mat-checkbox>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" 
+              [disabled]="signupForm.invalid" 
+              class="signup-button">
+        <mat-icon>person_add</mat-icon>
+        <span>Create Account</span>
+      </button>
+
+      <div class="login-section">
+        <span>Already have an account?</span>
+        <a routerLink="/login" class="login-link">Login</a>
+      </div>
+    </form>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -9,20 +9,25 @@ import { NotificationService } from 'src/app/services/notification.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   signupForm: FormGroup;
+  hidePassword = true;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private notificationService: NotificationService
   ) {
-    this.signupForm = this.fb.group({
+    this.signupForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+      acceptTerms: [false, Validators.requiredTrue]
     });
+  }
+
+  ngOnInit(): void {
   }
 
   onSubmit() {

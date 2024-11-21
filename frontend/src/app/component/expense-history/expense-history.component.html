@@ -1,53 +1,96 @@
-<div class="expense-history-container container">
-    <button mat-icon-button (click)="goBack()" aria-label="Back">
+<div class="expense-history-container">
+  <div class="header-section mb-4">
+    <div class="d-flex align-items-center">
+      <button mat-icon-button (click)="goBack()" class="back-button me-3">
         <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2 *ngIf="userId" class="text-center my-4">Expense History for User ID: {{ userId }}</h2>
-    <h2>Total Balance: 
-        <span [ngClass]="{'text-success': balance >= 0, 'text-danger': balance < 0}">
-            {{ balance >= 0 ? '+' : '-' }}${{ Math.abs(balance) }}
-        </span>
-    </h2>
-    <div class="row" *ngIf="expenses.length > 0; else noExpenses">
-        <div class="col-md-12 mb-3" *ngFor="let expense of expenses">
-            <mat-card class="w-100">
-                <mat-card-header>
-                    <mat-card-title>{{ expense.expense.title }}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h3 class="m-0">{{ expense.title }}</h3>
-                      <p class="text-muted m-0">{{ expense.expense.date | date: 'medium' }}</p>
-                    </div>
-                    <div class="mb-2">
-                      <p class="m-0">
-                        <strong>
-                          <ng-container *ngIf="expense.paidBy.id === loginUserId; else owed">
-                            {{ expense.owedBy.name }} owed you ${{ expense.amount }}
-                          </ng-container>
-                          <ng-template #owed>
-                            You owed {{ expense.paidBy.name }} ${{ expense.amount }}
-                          </ng-template>
-                        </strong>
-                      </p>
-                    </div>
-                    <div class="text-end">
-                      <p class="m-0 fw-bold" [ngClass]="{'text-success': expense.paidBy.id === loginUserId, 'text-danger': expense.paidBy.id !== loginUserId}">
-                        {{ expense.paidBy.id === loginUserId ? '+' : '-' }}${{ expense.amount }}
-                      </p>
-                    </div>
-                  </mat-card-content>
-            </mat-card>
-        </div>
+      </button>
+      <h1 class="mb-0">Expense History</h1>
     </div>
-</div>
-
-<ng-template #noExpenses>
-    <div class="text-center">
-        <mat-card class="w-100">
+    
+    <div class="balance-card mt-4">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <mat-card class="summary-card">
             <mat-card-content>
-                No expenses found for this user.
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle status-icon me-3" 
+                     [ngClass]="{'bg-success bg-opacity-10': balance >= 0, 
+                                'bg-danger bg-opacity-10': balance < 0}">
+                  <mat-icon [class.text-success]="balance >= 0" 
+                           [class.text-danger]="balance < 0">
+                    {{balance >= 0 ? 'trending_up' : 'trending_down'}}
+                  </mat-icon>
+                </div>
+                <div>
+                  <p class="text-muted mb-1">Total Balance</p>
+                  <h2 class="mb-0" [ngClass]="{'text-success': balance >= 0, 
+                                              'text-danger': balance < 0}">
+                    {{ balance >= 0 ? '+' : '-' }}${{ Math.abs(balance) }}
+                  </h2>
+                </div>
+              </div>
             </mat-card-content>
-        </mat-card>
+          </mat-card>
+        </div>
+      </div>
     </div>
-</ng-template>
+  </div>
+
+  <div class="expense-list mt-4" *ngIf="expenses.length > 0; else noExpenses">
+    <div class="timeline">
+      <div class="expense-item" *ngFor="let expense of expenses">
+        <mat-card class="expense-card hover-card">
+          <mat-card-content>
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="expense-info">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="category-icon rounded-circle me-3"
+                       [ngStyle]="{'background-color': getRandomColor()}">
+                    <mat-icon>receipt</mat-icon>
+                  </div>
+                  <div>
+                    <h3 class="expense-title mb-0">{{ expense.expense.title }}</h3>
+                    <small class="text-muted">{{ expense.expense.date | date: 'MMM d, y, h:mm a' }}</small>
+                  </div>
+                </div>
+                
+                <p class="status-text mb-2">
+                  <ng-container *ngIf="expense.paidBy.id === loginUserId; else owedTemplate">
+                    <span class="text-success">
+                      <mat-icon class="align-middle me-1" style="font-size: 16px">arrow_upward</mat-icon>
+                      {{ expense.owedBy.name }} owes you
+                    </span>
+                  </ng-container>
+                  <ng-template #owedTemplate>
+                    <span class="text-danger">
+                      <mat-icon class="align-middle me-1" style="font-size: 16px">arrow_downward</mat-icon>
+                      You owe {{ expense.paidBy.name }}
+                    </span>
+                  </ng-template>
+                </p>
+              </div>
+              
+              <div class="amount-badge" 
+                   [ngClass]="{'badge-success': expense.paidBy.id === loginUserId,
+                              'badge-danger': expense.paidBy.id !== loginUserId}">
+                {{ expense.paidBy.id === loginUserId ? '+' : '-' }}${{ expense.amount }}
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noExpenses>
+    <div class="empty-state text-center py-5">
+      <mat-icon class="empty-icon mb-3">receipt_long</mat-icon>
+      <h3>No Expenses Yet</h3>
+      <p class="text-muted mb-4">There are no expenses to show at the moment.</p>
+      <button mat-raised-button color="primary" (click)="openAddExpenseDialog()">
+        <mat-icon class="me-2">add</mat-icon>
+        Add Your First Expense
+      </button>
+    </div>
+  </ng-template>
+</div>
