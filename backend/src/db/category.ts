@@ -4,12 +4,13 @@ import { generateV4uuid } from "../common/util";
 
 export async function addCategoryDB(data: any): Promise<any> {
   try {
-    const query = `INSERT INTO category (id, name, createdAt, isDeleted) VALUES (?, ?, ?, ?);`;
+    const query = `INSERT INTO category (id, name, createdAt, isDeleted, createdBy) VALUES (?, ?, ?, ?, ?);`;
     const result = await execute(query, [
       generateV4uuid(),
       data.name,
       Date.now(),
-      false
+      false,
+      data.createdBy
     ]);
     
     if (result.affectedRows > 0) {
@@ -22,10 +23,10 @@ export async function addCategoryDB(data: any): Promise<any> {
   }
 }
 
-export async function getCategoriesDB(): Promise<any> {
+export async function getCategoriesDB(id: string): Promise<any> {
   try {
-    const query = `SELECT * FROM category WHERE isDeleted = false ORDER BY createdAt DESC;`;
-    const result = await execute(query, []);
+    const query = `SELECT * FROM category WHERE createdBy = ? AND isDeleted = false ORDER BY createdAt DESC;`;
+    const result = await execute(query, [id]);
     return result;
   } catch (error) {
     console.error("Error in getCategoriesDB:", error);

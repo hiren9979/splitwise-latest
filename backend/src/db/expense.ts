@@ -85,57 +85,7 @@ export async function getExpenseHistoryDB(data: any) {
                       LEFT JOIN users u1 ON u1.id = ed.owedBy
                       WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
                         OR (ed.owedBy = ? AND ed.paidBy = ?)
-                      ORDER BY e.createdAt DESC`;
-    // const query = `SELECT ed.id,ed.amount
-    //                ,JSON_OBJECT(
-    //                    'id', u.id,
-    //                    'name', u.name,
-    //                    'email', u.email
-    //                ) as paidBy,
-    //                JSON_OBJECT(
-    //                    'id', u1.id,
-    //                    'name', u1.name,
-    //                    'email', u1.email
-    //                ) as owedBy,
-    //                COALESCE(totalAmounts.total, 0) as balance,
-    //                JSON_OBJECT(
-    //                    'id', e.id,
-    //                    'amount', e.amount,
-    //                    'notes', e.notes,
-    //                    'title', e.title,
-    //                    'paidBy', e.paidBy,
-    //                    'owedBy', e.owedBy,
-    //                    'createdAt', e.createdAt,
-    //                    'user', (
-    //                        SELECT JSON_ARRAYAGG(
-    //                            JSON_OBJECT(
-    //                                'id', u.id,
-    //                                'name', u.name,
-    //                                'email', u.email
-    //                            )
-    //                        ) FROM users u WHERE FIND_IN_SET(u.id, e.owedBy) > 0
-    //                    )
-    //                ) as expense 
-    //                FROM expenseDetail ed
-    //                LEFT JOIN expense e ON e.id = ed.expenseId
-    //                LEFT JOIN users u ON u.id = ed.paidBy
-    //                LEFT JOIN users u1 ON u1.id = ed.owedBy
-    //                LEFT JOIN (
-    //                    SELECT 
-    //                        ed.owedBy,
-    //                        SUM(CASE 
-    //                            WHEN ed.paidBy = ? THEN ed.amount
-    //                            WHEN ed.paidBy = ? THEN -ed.amount
-    //                        END) AS total
-    //                    FROM expenseDetail ed
-    //                    WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
-    //                       OR (ed.owedBy = ? AND ed.paidBy = ?)
-    //                    GROUP BY ed.owedBy
-    //                ) AS totalAmounts ON totalAmounts.owedBy = ed.owedBy
-    //                WHERE (ed.owedBy = ? AND ed.paidBy = ?) 
-    //                   OR (ed.owedBy = ? AND ed.paidBy = ?)
-    //                ORDER BY e.createdAt DESC`;
-                   
+                      ORDER BY e.createdAt DESC`;                
     const params = [
       data.paidBy, data.otherUserId,  // For totalAmounts subquery CASE
       data.otherUserId, data.paidBy, data.paidBy, data.otherUserId   // For main WHERE clause

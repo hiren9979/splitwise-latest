@@ -6,7 +6,7 @@ import { ExpenseService } from 'src/app/services/expense/expense.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { CategoryService } from 'src/app/services/category/category.service';
-
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-add-expense',
@@ -34,7 +34,8 @@ export class AddExpenseComponent implements OnInit {
     private authService: AuthService,
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
-    private dialogRef: MatDialogRef<AddExpenseComponent>
+    private dialogRef: MatDialogRef<AddExpenseComponent>,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -62,42 +63,43 @@ export class AddExpenseComponent implements OnInit {
     });
 
     if(this.splitType === 'equally'){
-
-    if (this.totalExpense == null || this.totalExpense <= 0) {
-      console.error('Total expense cannot be null or zero.');
-      alert('Please enter a valid total expense amount.'); // Alert the user
-      return; // Exit the function to prevent submission
-    }
-
-    this.expenseService.splitEqually(this.selectedUsers, this.totalExpense, this.title, this.notes, epochDate, this.splitType, this.selectedCategory).subscribe(
-      (response: any) => {
-        console.log('Expense split successfully:', response);
-        this.closeDialog();
-      },
-      (error: any) => {
-        console.error('Error splitting expense:', error);
+      if (this.totalExpense == null || this.totalExpense <= 0) {
+        this.notificationService.showError('Please enter a valid total expense amount.');
+        console.error('Total expense cannot be null or zero.');
+        return;
       }
-    );
-  }
-  else{
 
-    this.unEqualExpenseTotal = this.unEqualExpense.reduce((sum: any, item: any) => sum + Number(item.expense), 0);
-    console.log('Total of individual expenses:', this.unEqualExpenseTotal);
-    if (this.unEqualExpenseTotal !== this.totalExpense) {
-      alert('Total of individual expenses must equal the total expense.');
-      return;
-    }
-
-    this.expenseService.splitUnequally(this.totalExpense, this.notes, this.unEqualExpense, this.splitType, this.selectedCategory).subscribe({
-      next: (response) => {
-        console.log('Expense split successfully:', response);
-      },
-      error: (error: any) => {
-        console.error('Error splitting expense:', error);
+      this.expenseService.splitEqually(this.selectedUsers, this.totalExpense, this.title, this.notes, epochDate, this.splitType, this.selectedCategory).subscribe(
+        (response: any) => {
+          console.log('Expense split successfully:', response);
+          this.notificationService.showSuccess('Expense added successfully!');
+          this.closeDialog();
+        },
+        (error: any) => {
+          console.error('Error splitting expense:', error);
+          this.notificationService.showError(error.error?.message || 'Failed to add expense. Please try again.');
+        }
+      );
+    } else {
+      this.unEqualExpenseTotal = this.unEqualExpense.reduce((sum: any, item: any) => sum + Number(item.expense), 0);
+      console.log('Total of individual expenses:', this.unEqualExpenseTotal);
+      if (this.unEqualExpenseTotal !== this.totalExpense) {
+        this.notificationService.showError('Total of individual expenses must equal the total expense.');
+        return;
       }
-    });
-    
-  }
+
+      this.expenseService.splitUnequally(this.totalExpense, this.notes, this.unEqualExpense, this.splitType, this.selectedCategory).subscribe({
+        next: (response) => {
+          console.log('Expense split successfully:', response);
+          this.notificationService.showSuccess('Expense added successfully!');
+          this.closeDialog();
+        },
+        error: (error: any) => {
+          console.error('Error splitting expense:', error);
+          this.notificationService.showError(error.error?.message || 'Failed to add expense. Please try again.');
+        }
+      });
+    }
 
     console.log(this.selectedUsers)
     this.submitted = true;
@@ -124,6 +126,7 @@ export class AddExpenseComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching user data:', error);
+        this.notificationService.showError('Failed to fetch users. Please try again.');
       }
     );
   }
@@ -136,6 +139,7 @@ export class AddExpenseComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error fetching categories:', error);
+        this.notificationService.showError('Failed to fetch categories. Please try again.');
       }
     );
   }

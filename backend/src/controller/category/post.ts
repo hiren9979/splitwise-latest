@@ -6,7 +6,8 @@ import { addCategoryDB } from "../../db/category";
 export default async function createCategory(request: CustomRequest, response: Response) {
   try {
     const data = {
-      name: request.body.name
+      name: request.body.name,
+      createdBy: request.user.userId
     };
 
     const info = await addCategoryDB(data);

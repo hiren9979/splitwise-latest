@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-signup',
@@ -14,7 +15,8 @@ export class SignupComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
@@ -28,13 +30,15 @@ export class SignupComponent {
       console.log('Form Submitted!', this.signupForm.value);
       this.authService.signup(this.signupForm.value).subscribe(
         (response: any) => {
-          if (response?.statusCode) {
+          if (response) {
+            this.notificationService.showSuccess('Registration successful! Please login.');
             console.log('Signup successful:', response);
             this.router.navigate(['/login']);
             this.signupForm.reset();
           }
         },
         (error) => {
+          this.notificationService.showError(error.error?.message || 'Registration failed. Please try again.');
           console.error('Error signing up:', error);
         }
       );

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 interface CategoryData {
   id?: number;
@@ -21,7 +22,8 @@ export class AddCategoryDialogComponent implements OnInit {
     private fb: FormBuilder,
     private categoryService: CategoryService,
     public dialogRef: MatDialogRef<AddCategoryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CategoryData
+    @Inject(MAT_DIALOG_DATA) public data: CategoryData,
+    private notificationService: NotificationService
   ) {
     this.categoryForm = this.fb.group({
       id: [null],
@@ -50,19 +52,23 @@ export class AddCategoryDialogComponent implements OnInit {
         const id = this.categoryForm.get('id')?.value;
         this.categoryService.updateCategory(id, categoryData).subscribe(
           () => {
+            this.notificationService.showSuccess('Category updated successfully!');
             this.dialogRef.close(true);
           },
           error => {
             console.error('Error updating category:', error);
+            this.notificationService.showError(error.error?.message || 'Failed to update category. Please try again.');
           }
         );
       } else {
         this.categoryService.createCategory(categoryData).subscribe(
           () => {
+            this.notificationService.showSuccess('Category created successfully!');
             this.dialogRef.close(true);
           },
           error => {
             console.error('Error creating category:', error);
+            this.notificationService.showError(error.error?.message || 'Failed to create category. Please try again.');
           }
         );
       }
@@ -72,4 +78,4 @@ export class AddCategoryDialogComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
-} 
+}

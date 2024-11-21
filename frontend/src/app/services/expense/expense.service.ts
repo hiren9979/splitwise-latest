@@ -82,4 +82,26 @@ export class ExpenseService {
     });
     return this.http.get(apiUrl, { headers: header });
   }
+
+  getIndividualBalance() {
+    const authToken = localStorage.getItem('authToken');
+    const apiUrl = `${environment.apiUrl}/chart/individualBalance`;
+    const header = new HttpHeaders({
+      'Authorization': `Bearer ${authToken}`,
+    });
+    return this.http.get(apiUrl, { headers: header });
+  }
+
+  getBalanceOverview(dateFilter:any) {
+    const authToken = localStorage.getItem('authToken');
+    const apiUrl = `${environment.apiUrl}/chart/balanceOverview`;
+    
+    const header = new HttpHeaders({
+      'Authorization': `Bearer ${authToken}`,
+      'year': dateFilter.year.toString(),
+      'month': dateFilter.month.toString()
+    });
+    
+    return this.http.get(apiUrl, { headers: header });
+  }
 }

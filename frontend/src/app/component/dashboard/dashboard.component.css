@@ -43,3 +43,7 @@ h3 {
     color: #007bff;
     /* Header color */
 }
+
+#monthlySpendingChart {
+  min-height: 400px; /* Increased height for better visibility of small values */
+}
