@@ -13,33 +13,64 @@
 
   <!-- Friends Section -->
   <div class="row">
-    <div class="col-12 mb-4">
-      <h2 class="fw-bold">Your Friends</h2>
+    <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h2 class="fw-bold mb-0">Your Friends</h2>
+        <p class="text-muted mt-2">Split expenses effortlessly with your friends</p>
+      </div>
+      <button mat-stroked-button color="primary" class="add-friend-btn">
+        <mat-icon class="me-2">person_add</mat-icon>
+        Add Friend
+      </button>
     </div>
-    <div class="col-md-4 mb-4" *ngFor="let user of users">
-      <div class="card border-0 shadow-sm h-100 hover-card" [routerLink]="['/expense-history', user.id]">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="rounded-circle bg-light p-2 me-3">
-              <mat-icon [class]="'text-' + ['primary', 'success', 'info', 'warning', 'danger'][user.id % 5]">
-                account_circle
-              </mat-icon>
-            </div>
-            <div>
-              <h5 class="fw-bold mb-1">{{ user.name }}</h5>
-              <p class="text-muted small mb-0">{{ user.email }}</p>
-            </div>
-          </div>
-          
-          <div class="alert" [class.alert-success]="user.balance > 0" 
-               [class.alert-danger]="user.balance < 0"
-               [class.alert-light]="user.balance === 0">
-          </div>
 
-          <button mat-button color="primary" class="w-100 mt-2">
-            <mat-icon class="me-2">history</mat-icon>
-            View History
+    <div class="col-md-4 mb-4" *ngFor="let user of users; let i = index">
+      <div class="friend-card" 
+           [ngClass]="{'dark-card': isDarkMode}"
+           [routerLink]="['/expense-history', user.id]"
+           [style.animation-delay]="i * 0.1 + 's'">
+        <!-- Card Header -->
+        <div class="friend-card-header">
+          <div class="friend-avatar-wrapper">
+            <div class="friend-avatar" [ngClass]="'bg-' + ['primary', 'success', 'info', 'warning', 'danger'][user.id % 5]">
+              <mat-icon class="avatar-icon">account_circle</mat-icon>
+            </div>
+            <div class="online-status" [class.active]="user.isOnline"></div>
+          </div>
+          <div class="friend-info">
+            <h3 class="friend-name">{{ user.name }}</h3>
+            <p class="friend-email">{{ user.email }}</p>
+          </div>
+        </div>
+        
+
+        <!-- Action Buttons -->
+        <div class="friend-card-actions">
+          <button mat-flat-button color="primary" class="action-btn settle-btn">
+            <mat-icon>payments</mat-icon>
+            <span>Settle Up</span>
           </button>
+          <button mat-stroked-button class="action-btn history-btn">
+            <mat-icon>history</mat-icon>
+            <span>History</span>
+          </button>
+          <button mat-icon-button class="action-btn more-btn" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit Friend</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>block</mat-icon>
+              <span>Block</span>
+            </button>
+            <button mat-menu-item class="text-danger">
+              <mat-icon>delete</mat-icon>
+              <span>Remove Friend</span>
+            </button>
+          </mat-menu>
         </div>
       </div>
     </div>

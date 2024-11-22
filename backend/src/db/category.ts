@@ -25,7 +25,7 @@ export async function addCategoryDB(data: any): Promise<any> {
 
 export async function getCategoriesDB(id: string): Promise<any> {
   try {
-    const query = `SELECT * FROM category WHERE createdBy = ? AND isDeleted = false ORDER BY createdAt DESC;`;
+    const query = `SELECT * FROM category WHERE createdBy = ? OR createdBy = 'admin' AND isDeleted = false ORDER BY createdAt DESC;`;
     const result = await execute(query, [id]);
     return result;
   } catch (error) {

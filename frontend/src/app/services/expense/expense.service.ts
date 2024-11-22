@@ -31,7 +31,7 @@ export class ExpenseService {
     return this.http.post(apiUrl, expenseData, { headers: header });
   }
 
-  splitUnequally(totalExpense: number, notes: string, unEqualExpense: any[], splitType: string, category: string) {
+  splitUnequally(totalExpense: number, title: string, notes: string, date: number, unEqualExpense: any[],splitType: string, category: string) {
     const authToken = localStorage.getItem('authToken');
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -41,6 +41,8 @@ export class ExpenseService {
     const apiUrl = `${environment.apiUrl}/expense/unequally`;
     const expenseData = {
       totalExpense: totalExpense,
+      title: title,
+      date: date,
       notes: notes,
       splitType: 'unEqually',
       unEqualExpense: unEqualExpense,

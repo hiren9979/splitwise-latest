@@ -21,7 +21,7 @@ export default async function expenseEqually(request: CustomRequest, response: R
     if (!data.date) {
       data.date = Date.now();
     }
-    data.owedBy = data.owedBy.map((user: any) => user.id).join(", ");
+    data.owedBy = data.owedBy.map((user: any) => user.id).join(",");
 
     const info = await addExpenseDB(data);
 

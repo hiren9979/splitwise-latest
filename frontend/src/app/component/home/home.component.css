@@ -39,66 +39,333 @@
 }
 
 .friend-card {
-  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
   overflow: hidden;
+  border: 2px solid transparent;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  animation: fadeInUp 0.6s backwards;
+}
+
+.friend-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2196F3, #64B5F6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.friend-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(33, 150, 243, 0.3);
+  box-shadow: 0 12px 48px rgba(33, 150, 243, 0.12);
+}
+
+.friend-card:hover::before {
+  opacity: 1;
+}
+
+.friend-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.friend-avatar-wrapper {
+  position: relative;
+  margin-right: 16px;
 }
 
 .friend-avatar {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  font-weight: 500;
+  background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.friend-card:hover .friend-avatar {
+  transform: scale(1.05);
+}
+
+.avatar-icon {
+  color: white;
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.online-status {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ddd;
+  border: 2px solid white;
+  transition: all 0.3s ease;
+}
+
+.online-status.active {
+  background-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
 }
 
 .friend-info {
   flex: 1;
-  min-width: 0;
 }
 
-.friend-info h5 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.friend-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+  transition: color 0.3s ease;
 }
 
-.friend-info small {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.friend-email {
+  font-size: 0.875rem;
+  color: #64B5F6;
+  margin: 0;
+  transition: color 0.3s ease;
 }
 
-.hover-card {
-  cursor: pointer;
+.friend-card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.friend-card:hover .friend-card-actions {
+  opacity: 1;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.hover-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+.settle-btn {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  color: white;
+  border: none;
 }
 
-button {
-  transition: all 0.2s ease;
+.settle-btn:hover {
+  background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
-button:hover {
-  transform: translateY(-1px);
+.expense-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  color: white;
+  border: none;
 }
 
-.mat-stroked-button {
-  border-radius: 8px;
-  padding: 4px 16px;
+.expense-btn:hover {
+  background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
-.display-1 {
-  font-size: 4rem;
+.history-btn {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196F3;
+  border: 1px solid rgba(33, 150, 243, 0.2);
 }
 
-/* Empty state styles */
+.history-btn:hover {
+  background: rgba(33, 150, 243, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+}
+
+.balance-container {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.balance-header {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.balance-amount {
+  display: flex;
+  flex-direction: column;
+}
+
+.amount-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.balance-status {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.positive .amount-value {
+  color: #4CAF50;
+}
+
+.negative .amount-value {
+  color: #f44336;
+}
+
+.activity-preview {
+  margin-bottom: 24px;
+}
+
+.activity-header {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.activity-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.activity-icon {
+  color: var(--text-secondary);
+  margin-right: 12px;
+  font-size: 20px;
+}
+
+.activity-details {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activity-title {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.activity-amount {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.add-friend-btn {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.add-friend-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.3);
+}
+
+:root {
+  --primary-color: #2196F3;
+  --primary-light: #64B5F6;
+  --primary-dark: #1976D2;
+  --secondary-color: #FF4081;
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --danger-color: #F44336;
+  --info-color: #00BCD4;
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+  --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  --gradient-success: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+  --gradient-danger: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+  --gradient-warning: linear-gradient(135deg, #FFB300 0%, #FF8F00 100%);
+  --gradient-info: linear-gradient(135deg, #00ACC1 0%, #0097A7 100%);
+}
+
+.dark-theme {
+  --primary-color: #64B5F6;
+  --primary-light: #90CAF9;
+  --primary-dark: #42A5F5;
+  --gray-100: #1E1E1E;
+  --gray-200: #2D2D2D;
+  --gray-300: #404040;
+  --gray-400: #4D4D4D;
+  --gray-500: #666666;
+  --gray-600: #808080;
+  --gray-700: #999999;
+  --gray-800: #B3B3B3;
+  --gray-900: #FFFFFF;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.friend-card {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
 .rounded-3 {
   border-radius: 1rem !important;
 }
@@ -106,4 +373,28 @@ button:hover {
 .py-5 {
   padding-top: 3rem !important;
   padding-bottom: 3rem !important;
+}
+
+.dark-card {
+  background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-card .friend-name {
+  color: #ffffff;
+}
+
+.dark-card .friend-email {
+  color: #90CAF9;
+}
+
+.dark-card .history-btn {
+  background: rgba(33, 150, 243, 0.15);
+  color: #90CAF9;
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.dark-card:hover {
+  border-color: rgba(33, 150, 243, 0.4);
+  box-shadow: 0 12px 48px rgba(33, 150, 243, 0.15);
 }

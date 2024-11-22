@@ -16,7 +16,7 @@ export async function getExpenseByCategoryDB(id: any) {
                             )
                         )
                     ) AS categories
-                    FROM category c WHERE c.createdBy = ? AND c.isDeleted = false;`;
+                    FROM category c WHERE (c.createdBy = 'admin' OR c.createdBy = ?) AND c.isDeleted = false;`;
   const info = await execute(query, [id,id]);
   
   // Parse the JSON string from the result

@@ -8,6 +8,9 @@ export default async function expenseUnequally(request: any, response: Response)
     const data: any = {
       amount: parseFloat(request.body.totalExpense),
       paidBy: request.user.userId,
+      title: request.body.title,
+      date: request.body.date,
+      categoryId: request.body.categoryId,
       unEqualExpense: request.body.unEqualExpense,
       notes: request.body.description,
       createdBy: request.user.userId,
@@ -16,7 +19,7 @@ export default async function expenseUnequally(request: any, response: Response)
     data.owedBy = data.unEqualExpense.map((user: any) => user.id).join(",");
     const info = await addExpenseDB(data);
 
-    if (info.status === 200) {
+    if (info.statusCode === 200) {
       for (let i = 0; i < data.unEqualExpense.length; i++) {
         const expenseDetailData = {
           paidBy: data.paidBy,

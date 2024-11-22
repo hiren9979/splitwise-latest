@@ -1,0 +1,198 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+  --primary-color: #1a237e;  /* Dark blue */
+  --secondary-color: #283593;
+  --accent-color: #3949ab;
+  --background-color: #1a237e;
+  --text-color: #ffffff;
+  --hover-color: #3949ab;
+  --border-color: #E8EAF6;
+  --navbar-bg: #1a237e;
+  --navbar-text: #ffffff;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.modern-toolbar {
+  background-color: var(--navbar-bg) !important;
+  color: var(--navbar-text) !important;
+  padding: 0 16px;
+  height: 64px !important;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  .mat-icon {
+    color: var(--navbar-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: var(--accent-color);
+      transform: scale(1.1);
+    }
+  }
+
+  button {
+    mat-icon {
+      color: var(--navbar-text);
+    }
+  }
+}
+
+.modern-sidenav {
+  width: 280px;
+  background-color: var(--background-color);
+  border-right: 1px solid var(--border-color);
+
+  .mat-list-item {
+    color: var(--primary-color);
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin: 4px 8px;
+    height: 48px;
+
+    &:hover {
+      background-color: var(--border-color);
+      color: var(--accent-color);
+
+      .mat-icon {
+        color: var(--accent-color);
+        transform: scale(1.1);
+      }
+    }
+
+    .mat-icon {
+      margin-right: 12px;
+      color: var(--primary-color);
+      transition: all 0.2s ease;
+    }
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--navbar-text);
+  text-decoration: none;
+  margin-left: 8px;
+  letter-spacing: -0.5px;
+  
+  .mat-icon {
+    margin-right: 8px;
+    font-size: 28px;
+    height: 28px;
+    width: 28px;
+  }
+
+  &:hover {
+    color: var(--navbar-text);
+    text-decoration: none;
+    opacity: 0.9;
+
+    .mat-icon {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.nav-button {
+  background: transparent;
+  color: var(--navbar-text);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 0 4px;
+
+  &:hover {
+    background-color: var(--hover-bg);
+  }
+}
+
+.logout-btn {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--navbar-text) !important;
+  border-radius: 24px;
+  padding: 0 24px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-left: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  .mat-icon {
+    color: var(--navbar-text) !important;
+    margin-right: 4px;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+  }
+}
+
+.username-display {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: var(--navbar-text);
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .mat-icon {
+    margin-right: 8px;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Add smooth scrollbar for the content */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}

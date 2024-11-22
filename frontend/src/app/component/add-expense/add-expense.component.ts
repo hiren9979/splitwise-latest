@@ -83,12 +83,16 @@ export class AddExpenseComponent implements OnInit {
     } else {
       this.unEqualExpenseTotal = this.unEqualExpense.reduce((sum: any, item: any) => sum + Number(item.expense), 0);
       console.log('Total of individual expenses:', this.unEqualExpenseTotal);
-      if (this.unEqualExpenseTotal !== this.totalExpense) {
-        this.notificationService.showError('Total of individual expenses must equal the total expense.');
-        return;
-      }
 
-      this.expenseService.splitUnequally(this.totalExpense, this.notes, this.unEqualExpense, this.splitType, this.selectedCategory).subscribe({
+      // // Get logged in user from localStorage
+      // const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+      // console.log(loggedInUser);
+      // if (loggedInUser && loggedInUser.id) {
+      //   this.unEqualExpense.push({ id: loggedInUser.id, expense: this.totalExpense - this.unEqualExpenseTotal });
+      // }
+      // console.log(this.users);
+
+      this.expenseService.splitUnequally(this.totalExpense, this.title, this.notes, epochDate, this.unEqualExpense, this.splitType, this.selectedCategory).subscribe({
         next: (response) => {
           console.log('Expense split successfully:', response);
           this.notificationService.showSuccess('Expense added successfully!');
@@ -122,7 +126,6 @@ export class AddExpenseComponent implements OnInit {
     this.authService.getUsers().subscribe(
       (response) => {
         this.userList = response;
-        console.log(this.users);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -147,6 +150,7 @@ export class AddExpenseComponent implements OnInit {
   selectUser(user: any): void {
     this.unEqualExpense = this.selectedUsers.map(user => ({ id: user.id, expense: 0 }));
     this.unEqualExpenseTotal += user.expense;
+    console.log("Selected Users:",this.selectedUsers);
   }
 
   goBack(): void {

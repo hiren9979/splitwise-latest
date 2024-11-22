@@ -21,8 +21,14 @@ export interface PeriodicElement {
 })
 export class HomeComponent implements OnInit {
   users: any = [];
+  isDarkMode = false;
 
-  constructor(private http: HttpClient, private authService: AuthService, private dialog: MatDialog) {}
+  constructor(private http: HttpClient, private authService: AuthService, private dialog: MatDialog) {
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    this.isDarkMode = savedTheme === 'dark';
+    this.applyTheme();
+  }
 
   ngOnInit(): void {
     this.fetchUsers(); 
@@ -50,6 +56,20 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result:any) => {
       console.log('The dialog was closed');
     });
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  private applyTheme(): void {
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
   }
 
 }

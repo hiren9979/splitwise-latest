@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { getIndividualBalanceDB } from "../../../db/chart";
+import { CustomRequest } from "../../../model/customRequest";
 
-export const getIndividualBalance = async (req: Request, res: Response) => {
+export const getIndividualBalance = async (req: CustomRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
